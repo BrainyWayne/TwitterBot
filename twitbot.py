@@ -99,16 +99,25 @@ def follow_after_follow():
     message = "Thank you for following me. Looking foward to getting to know you."
     user = get_user_info()
     while True:
+        
         old_number_of_followers = user.followers_count
         time.sleep(3600)
         new_number_of_followers = user.followers_count
         num_new_followers = new_number_of_followers - old_number_of_followers
-        list_of_followers = tweepy.Cursor(api.followers).items().reverse()
+        list_of_followers = list(tweepy.Cursor(api.followers).items()).reverse()
+        list_of_followers = []
+        for user in tweepy.Cursor(api.followers).items():
+            list_of_followers.append(user)
 
-        for i in range(len(new_number_of_followers)):
-            list_of_followers[i].follow()
-            send_dm(list_of_followers[i], list_of_followers[i] + ",\n" + message)
-        
+        if num_new_followers == 0:
+            pass
+        else:
+            for i in range(num_new_followers):
+                list_of_followers[i].follow()
+                send_dm(list_of_followers[i].screen_name, list_of_followers[i].screen_name + ",\n" + message)
+                print("message sent")
+
+
         
 
 if __name__ == "__main__":
