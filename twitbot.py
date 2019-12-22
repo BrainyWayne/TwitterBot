@@ -1,12 +1,17 @@
 import tweepy
 import time
 import configparser
+# from flask import Flask
+
+# app = Flask(__name__)
 
 config = configparser.ConfigParser()
 config.read('twitbot.cfg')
+print(dict(config))
 
-api_key = config['KEYS']['api_key']
-api_secret_key = config['KEYS']['api_secret_key']
+
+api_key = config["KEYS"]['api_key']
+api_secret_key = config["KEYS"]['api_secret_key']
 access_token = config['TOKENS']['access_token']
 access_token_secret = config['TOKENS']['access_token_secret']
 
@@ -91,6 +96,7 @@ def follow_after_follow():
     """
     Checks every 1 hour for new followers and follows them.
     """
+    message = "Thank you for following me. Looking foward to getting to know you."
     user = get_user_info()
     while True:
         old_number_of_followers = user.followers_count
@@ -101,6 +107,7 @@ def follow_after_follow():
 
         for i in range(len(new_number_of_followers)):
             list_of_followers[i].follow()
+            send_dm(list_of_followers[i], list_of_followers[i] + ",\n" + message)
         
         
 
